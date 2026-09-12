@@ -9,13 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DemoApplication {
 
-    @GetMapping("/")
-    public String home() {
-        value = "Hello from Java App running on Amazon EKS!";
-        return value;
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
+    }
+
+    @GetMapping("/")
+    public String home() {
+        return "Hello from Java App running on Amazon EKS!";
     }
 }
