@@ -2,10 +2,10 @@
 FROM maven:3.8.8-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Copy project files and build the jar
+# Copy project files and build the jar (-e enables detailed error stack traces)
 COPY pom.xml .
 COPY src ./src
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -e
 
 # Stage 2: Run the application using lightweight Eclipse Temurin 17 JRE/JDK
 FROM eclipse-temurin:17-jdk-jammy
