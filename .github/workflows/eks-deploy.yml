@@ -29,10 +29,12 @@ jobs:
     - name: Compile Application
       run: mvn clean compile
 
-    - name: Run SonarQube Analysis
+    - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v5
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
       run: |
         mvn sonar:sonar \
           -Dsonar.host.url=${{ env.SONAR_HOST_URL }} \
