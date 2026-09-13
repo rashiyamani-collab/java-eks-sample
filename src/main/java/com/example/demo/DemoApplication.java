@@ -15,6 +15,6 @@ public class DemoApplication {
 
     @GetMapping("/")
     public String home() {
-        return "Hello from Java App running on Amazon EKS! 4:10 PM";
+        return "Hello from Java App running on Amazon EKS! 5:50 PM";
     }
 }
