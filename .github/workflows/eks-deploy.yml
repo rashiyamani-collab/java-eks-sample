@@ -69,7 +69,7 @@ jobs:
     - name: Run Trivy Vulnerability Scanner on Docker Image
       uses: aquasecurity/trivy-action@v0.35.0
       with:
-        image-ref: '${{ steps.login-ecr.outputs.registry }}/java-app:${{ github.sha }}'
+        image-ref: '${{ steps.login-ecr.outputs.registry }}/java-sample-app:${{ github.sha }}'
         format: 'table'
         exit-code: '0'
         ignore-unfixed: true
