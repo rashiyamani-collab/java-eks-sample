@@ -35,11 +35,6 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-      run: |
-        mvn sonar:sonar \
-          -Dsonar.host.url=${{ env.SONAR_HOST_URL }} \
-          -Dsonar.token=${{ env.SONAR_TOKEN }}
-
     - name: Build Application JAR
       run: mvn package -DskipTests
 
