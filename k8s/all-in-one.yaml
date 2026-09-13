@@ -14,11 +14,22 @@ spec:
       labels:
         app: java-app
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        fsGroup: 10001
       containers:
       - name: java-app
-        image: 074002960123.dkr.ecr.us-east-1.amazonaws.com/java-sample-app:latest
+        image: REPLACE_WITH_ECR_IMAGE_URI
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+            - ALL
         resources:
           limits:
             cpu: "500m"
@@ -26,38 +37,28 @@ spec:
           requests:
             cpu: "250m"
             memory: "256Mi"
-        readinessProbe:
+        livenessProbe:
           httpGet:
-            path: /
+            path: /actuator/health/liveness
             port: 8080
           initialDelaySeconds: 30
           periodSeconds: 10
-        livenessProbe:
+        readinessProbe:
           httpGet:
-            path: /
+            path: /actuator/health/readiness
             port: 8080
-          initialDelaySeconds: 45
-          periodSeconds: 15
+          initialDelaySeconds: 30
+          periodSeconds: 10
 ---
-
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: v1
+kind: Service
 metadata:
-  name: java-app-ingress
-  annotations:
-    alb.ingress.kubernetes.io/scheme: "internet-facing"
-    alb.ingress.kubernetes.io/target-type: "ip"
-    alb.ingress.kubernetes.io/healthcheck-path: "/"
-    alb.ingress.kubernetes.io/ports: '{"http": 80}'
+  name: java-app-service
 spec:
-  ingressClassName: alb    # <--- Add this line here
-  rules:
-    - http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: java-app-service
-                port:
-                  number: 80
+  type: NodePort
+  selector:
+    app: java-app
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
