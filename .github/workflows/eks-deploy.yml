@@ -64,7 +64,10 @@ jobs:
       run: |
         aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.EKS_CLUSTER_NAME }}
 
+
+
     - name: Deploy to EKS
       run: |
-        sed -i 's|<YOUR_DOCKER_IMAGE>|${{ env.IMAGE }}|g' k8s/all-in-one.yaml
         kubectl apply -f k8s/all-in-one.yaml
+        kubectl set image deployment/java-app-deployment java-app=${{ env.IMAGE }}
+        kubectl rollout status deployment/java-app-deployment
